@@ -3,43 +3,172 @@
   <head>
     <title> reelyActive: JSON Silo </title>
     <link rel="stylesheet" href="style/main.css">
+	 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>
   </head>
-  <body>
-    <div id="content">
-      <img src="images/logo.png">
+  <body ng-app="json_silo">
+    <div id="content" ng-controller="main">
+      <div id="menu">
+        <ul>
+          <li><a ng-click="selectPerson()" ng-class="tabclass.person">Person</a></li>
+          <li><a ng-click="selectProduct()" ng-class="tabclass.product">Product</a></li>
+          <li><a ng-click="selectPlace()" ng-class="tabclass.place">Place</a></li>
+        </ul>
+      </div>
       <form action="add" method="post" enctype='application/json'>
-        <div class="split">
+        <div class="split" ng-controller="Person_Ctrl" ng-show="show.person">
           Enter your info:<br>
-          <input type="text" name="firstName" placeholder="First Name"><br>
-          <input type="text" name="lastName" placeholder="Last Name"><br>
-          <input type="text" name="portraitImageUrl" placeholder="Portrait Image URL"><br>
-          <input type="text" name="companyName" placeholder="Company Name"><br>
-          <input type="text" name="companyUrl" placeholder="Company Webpage URL"><br>
-          <input type="text" name="linkedInPublicUrl" placeholder="LinkedIn Public URL"><br>
-          <input type="text" name="twitterPersonalScreenName" placeholder="Twitter Handle (without @)"><br>
-          Check-in at:<br>
-          <select name="place" id="places">
-          </select><br>
-          Self-destruct after:<br>
-          <select name="duration" id="duration">
-          </select>
-        </div>
+            
+            <table>
+              <tr>
+                <td>Given Name:</td>
+                <td><input type="text" placeholder="Barn" ng-model="entity.givenName" ng-change='change()'/></td>
+              </tr>
+              <tr>
+                <td>Family Name:</td>
+                <td><input type="text" placeholder="Owl" ng-model="entity.familyName" ng-change='change()'/></td>   
+              </tr>   
+              <tr>
+                <td>Gender:</td>
+                <td>
+                  Male <input type="radio" ng-model="entity.gender" ng-change='change()' value="male"/>
+                  Female <input type="radio" ng-model="entity.gender" ng-change='change()' value="female"/>
+                </td>
+                </tr> 
+                <tr>
+                  <td>Nationality:</td>
+                  <td>
+                    <select ng-model="entity.nationality"  ng-options="pays.code as pays.nationality for pays in countries" ng-change='change()'>
+                    <option value="">-- Select a Country --</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Company Name:</td>
+                  <td><input type="text" placeholder="reelyActive" ng-model="entity.worksFor" ng-change='change()'/></td>
+                </tr>
+                <tr>
+                  <td>Job Title:</td> 
+                  <td><input type="text" placeholder="Mascot" ng-model="entity.jobTitle" ng-change='change()'/></td>
+                </tr>
+                <tr>
+                  <td>Personal URL:</td>
+                  <td><input type="url" placeholder="https://www.npmjs.com/package/barnowl" ng-model="entity.url" ng-change='change()'/></td>
+                </tr>
+                <tr>
+                  <td>Image URL:</td>
+                  <td><input type="url" placeholder="http://reelyactive.com/images/barnowl.jpg" ng-model="entity.image" ng-change='change()'/></td>
+                </tr>
+              </table>
+            <br/><br/>
+         
+        
         <div class="split">
           This is how it will be shared:<br>
-          <pre id="json"></pre>
+          <pre id="json">{{entity_ld | json}}</pre>
         </div>
+		</div>
+		
+		 <div ng-controller="Product_Ctrl"  ng-show="show.product" >
+        <div class="form">
+          
+          
+            <table>
+              <tr>
+                <td>Manufacturer:</td>
+                <td><input type="text" placeholder="reelyActive" ng-model="entity.name" ng-change='change()'/></td>
+              </tr>
+              <tr>
+                <td>Model:</td>  
+                <td><input type="text" placeholder="RA-R436 Reelceiver" ng-model="entity.model" ng-change='change()'/></td>
+              </tr>
+              <tr>
+                <td>Product URL:</td> 
+                <td><input type="url" placeholder="http://shop.reelyactive.com/products/ra-r436" ng-model="entity.Url" ng-change='change()'/></td>
+              </tr>
+              <tr>
+                <td>Logo URL:</td>
+                <td><input type="url" placeholder="http://reelyactive.com/images/reelyActiveLogo.png" ng-model="entity.logo" ng-change='change()'/></td>
+              </tr>
+              <tr>
+                <td>Image URL:</td>
+                <td><input type="url" placeholder="http://reelyactive.com/images/reelceiver.jpg" ng-model="entity.Image" ng-change='change()'/></td>
+              </tr>
+            </table>
+          
+        </div>
+        <div class="json">
+          This is how it will be shared:<br>
+          <pre>{{entity_ld | json}}</pre>
+        </div>
+      </div>
+	  
+	  <div ng-controller="Place_Ctrl"  ng-show="show.place">
+        <div class="form">
+       
+            <table>
+              <tr>
+                <td>Name:</td>
+                <td><input type="text" placeholder="Notman House" ng-model="entity.Name" ng-change='change()'/></td>
+              </tr>
+              <tr>
+                <td>Street Address:</td>
+                <td><input type="text" placeholder="51 rue Sherbrooke Ouest" ng-model="entity.streetAddress" ng-change='change()'/></td>
+              </tr> 
+              <tr>
+                <td>Locality (City):</td>
+                <td><input type="text" placeholder="Montr&eacute;al" ng-model="entity.addressLocality" ng-change='change()'/></td>
+              </tr>
+              <tr>
+                <td>Region (State/Province):</td>
+                <td><input type="text" placeholder="Qu&eacute;bec" ng-model="entity.addressRegion" ng-change='change()'/></td>
+              </tr>
+              <tr>
+                <td>Postal Code:</td>
+                <td><input type="text" placeholder="H2X 1X2" ng-model="entity.postalCode" ng-change='change()'/></td>
+              </tr>
+              <tr>
+                <td>Country:</td>
+                <td>
+                  <select ng-model="entity.addressCountry" ng-options=" country.code as country.nationality for country in countries" ng-change='change()'>
+                    <option value="">-- Select a Country --</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>Place URL:</td>
+                <td><input type="url" placeholder="http://notman.org" ng-model="entity.url" ng-change='change()'/></td>
+              </tr>
+              <tr>
+                <td>Logo URL:</td>
+                <td><input type="url" placeholder="http://reelyactive.com/images/notman-logo.png" ng-model="entity.logo" ng-change='change()'/></td>
+              </tr>
+              <tr>
+                <td>Image URL:</td>
+                <td><input type="url" placeholder="http://reelyactive.com/images/NotmanHouse.png" ng-model="entity.image" ng-change='change()'/><br/></td>
+              </tr>
+            </table>
+			
+			<div class="split">
+            This is how it will be shared:<br>
+          <pre id="json">{{entity_ld | json}}</pre>
+           </div>
+        
+        </div>
+      
+		 </div>
         <br style="clear:both">
         <div class="calltoaction">
           And the final step: &nbsp;
-          <input type="submit" name="action" value="Store your JSON in the silo">
+          <input type="submit" name="action" value="Store your JSON in the silo"/>
+		  <button type="reset"  ng-click="resetForm();resetplace()">Reset</button>
         </div>
       </form>
+	    </div>
       <p id="authentication">
         <a id="login" href="login.html"> Log in </a>
-        <a id="logout" href="logout"> Log out </a>
+        <a id="logout" href="logout.html"> Log out </a>
       </p>
-    </div>
-    <script type="text/javascript" src="js/jquery.min.js"></script>
+  
     <script type="text/javascript" src="js/script.js"></script>
   </body>
 </html>
