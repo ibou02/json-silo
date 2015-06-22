@@ -6,7 +6,11 @@
 
 var mymodule = angular.module("json_silo", []);
 
-mymodule.controller("main",function($scope) {
+mymodule.controller("main",function($scope,test) {
+ 
+	 $scope.resetForm = function (){
+		$scope.entity_ld = null;
+	 }		
 	 
 	   $scope.countries = [ 
     {nationality: 'Afghanistan', code: 'AF'},
@@ -254,28 +258,6 @@ mymodule.controller("main",function($scope) {
     {nationality: 'Zimbabwe', code: 'ZW'}
   ];
 	 
-	 
-	 $scope.entity_ld = {
-      "@context": {
-        "schema": "http://schema.org/"
-      },
-      "@graph": [
-        {
-          "@id": "person",
-          "@type": "schema:Person",
-        },
-	    {"@id":"product",
-		 "@type":"schema:product",
-		},
-		{
-           "@id": "entity",
-           "@type": "schema:entity",
-           "schema:address": {
-             "@type": "schema.PostalAddress"
-           }
-		}
-      ]
-    }
 	
 	$scope.show = { person: true, product: false, place: false };
   $scope.tabclass = { person: 'selected-tab', product: 'tab', place: 'tab' };
@@ -295,19 +277,14 @@ mymodule.controller("main",function($scope) {
     $scope.tabclass = { person: 'tab', product: 'tab', place: 'selected-tab' };
   };
 
-     var person = angular.copy($scope.entity_ld); 	 
-	  $scope.resetForm = function ()
-    {
-      $scope.entity_ld = angular.copy(person);
-    }
+    
   
 });
 
-mymodule.controller("Person_Ctrl", function($scope) {
+mymodule.controller("Person_Ctrl", function($scope,test) {
 	
-  $scope.entity = {};
+  $scope.entity_ld = test.entity_ld;
   
-
   function changeKeyValue() {
     for(var key in $scope.entity) {
       if($scope.entity.hasOwnProperty(key)) {
@@ -328,9 +305,10 @@ mymodule.controller("Person_Ctrl", function($scope) {
   
 });
 
-mymodule.controller("Product_Ctrl", function($scope) {
+mymodule.controller("Product_Ctrl", function($scope,test) {
 	
-  $scope.entity = {};
+	$scope.entity_ld = test.entity_ld;
+	
 
   function changeKeyValue() {
     for(var key in $scope.entity) {
@@ -350,8 +328,11 @@ mymodule.controller("Product_Ctrl", function($scope) {
   }
 });
 
-mymodule.controller("Place_Ctrl", function($scope) {
-  $scope.entity = {};
+mymodule.controller("Place_Ctrl", function($scope,test) {
+	
+  $scope.entity_ld = test.entity_ld;
+	
+ 
    
   function changeKeyValue() {
     for(var key in $scope.entity) {
@@ -364,28 +345,28 @@ mymodule.controller("Place_Ctrl", function($scope) {
           $scope.entity_ld["@graph"][2]["schema:" + key] = $scope.entity[key];
         }
         else if($scope.entity[key]== $scope.entity.streetAddress) {
-          $scope.entity_ld["@graph"][0]["schema:address"][key] = $scope.entity[key];
+          $scope.entity_ld["@graph"][2]["schema:address"][key] = $scope.entity[key];
         }
         else if($scope.entity[key]== $scope.entity.addressLocality) {
-          $scope.entity_ld["@graph"][0]["schema:address"][key] = $scope.entity[key];
+          $scope.entity_ld["@graph"][2]["schema:address"][key] = $scope.entity[key];
         }        
         else if($scope.entity[key]== $scope.entity.addressRegion) {
-          $scope.entity_ld["@graph"][0]["schema:address"][key] = $scope.entity[key];
+          $scope.entity_ld["@graph"][2]["schema:address"][key] = $scope.entity[key];
         }
         else if($scope.entity[key]== $scope.entity.postalCode) {
-          $scope.entity_ld["@graph"][0]["schema:address"][key] = $scope.entity[key];
+          $scope.entity_ld["@graph"][2]["schema:address"][key] = $scope.entity[key];
         }
         else if($scope.entity[key] == $scope.entity.addressCountry) {
-          $scope.entity_ld["@graph"][0]["schema:address"][key] = $scope.entity[key];
+          $scope.entity_ld["@graph"][2]["schema:address"][key] = $scope.entity[key];
         }
         else if($scope.entity[key]== $scope.entity.logo) {
-          $scope.entity_ld["@graph"][0]["schema:" + key] = $scope.entity[key];
+          $scope.entity_ld["@graph"][2]["schema:" + key] = $scope.entity[key];
         }
         else if($scope.entity[key]== $scope.entity.url) {
-          $scope.entity_ld["@graph"][0]["schema:" + key] = $scope.entity[key];
+          $scope.entity_ld["@graph"][2]["schema:" + key] = $scope.entity[key];
         }
         else if($scope.entity[key]== $scope.entity.image) {
-          $scope.entity_ld["@graph"][0]["schema:" + key] = $scope.entity[key];
+          $scope.entity_ld["@graph"][2]["schema:" + key] = $scope.entity[key];
         }
       }
     }
@@ -396,4 +377,36 @@ mymodule.controller("Place_Ctrl", function($scope) {
   }
   
 });
+
+mymodule.service("test", function () {
+	
+	var entity_ld = {
+      "@context": {
+        "schema": "http://schema.org/"
+      },
+      "@graph": [
+        {
+          "@id": "person",
+          "@type": "schema:Person",
+        },
+	    {"@id":"product",
+		 "@type":"schema:product",
+		},
+		{
+           "@id": "entity",
+           "@type": "schema:entity",
+           "schema:address": {
+             "@type": "schema.PostalAddress"
+           }
+		}
+      ]
+    };
+	return {
+                entity_ld: entity_ld
+				
+            };
+			
+        });
+	
+	
 
